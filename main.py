@@ -87,6 +87,14 @@ def MatrixChallenge(strArr):
     else:
         return True
     
+if __name__ == '__main__':
+    # Load the configuration files - boggle board and search words
+    with open('boggle_board.txt', 'r') as file:
+        boggle_board = file.read()
     
-text = ["abcd, adfg, asde, kkfs", "asd,acsa,erger,kadb"]
-print(MatrixChallenge(text))
+    with open('dictionary.txt', 'r') as file:
+        dictionary = file.read()
+
+    # Let's start the game!
+    print(MatrixChallenge([boggle_board, dictionary]))
+

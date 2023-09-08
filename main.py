@@ -2,26 +2,25 @@ import numpy as np
 
 
 def adjacentLettersMatrix(boggle_matrix, h, w):
-    temp = boggle_matrix.copy()
-    temp[h, w] = "*"
+    boggle_matrix[h, w] = "*"
     if h == 0 and w == 0:
-        return temp[h:h+2, w:w+2], [h, w]
+        return boggle_matrix[h:h+2, w:w+2], [h, w]
     elif h == 0 and w != len(boggle_matrix)-1 and w != 0:
-        return temp[h:h+2, w-1:w+2], [h, w-1]
+        return boggle_matrix[h:h+2, w-1:w+2], [h, w-1]
     elif h == len(boggle_matrix)-1 and w != 0 and w != len(boggle_matrix)-1:
-        return temp[h-1:, w-1:w+2], [h-1, w-1]
+        return boggle_matrix[h-1:, w-1:w+2], [h-1, w-1]
     elif h == len(boggle_matrix)-1 and w == 0:
-        return temp[h-1:, w:w+2], [h-1, w]
+        return boggle_matrix[h-1:, w:w+2], [h-1, w]
     elif h != 0 and h != len(boggle_matrix)-1 and w == len(boggle_matrix)-1:
-        return temp[h-1:h+2, w-1:], [h-1, w-1]
+        return boggle_matrix[h-1:h+2, w-1:], [h-1, w-1]
     elif h != 0 and h != len(boggle_matrix)-1 and w != 0 and w != len(boggle_matrix)-1:
-        return temp[h-1:h+2, w-1:w+2], [h-1, w-1]
+        return boggle_matrix[h-1:h+2, w-1:w+2], [h-1, w-1]
     elif h != 0 and h != len(boggle_matrix)-1 and w == 0:
-        return temp[h-1:h+2, w:w+2], [h-1, w]
+        return boggle_matrix[h-1:h+2, w:w+2], [h-1, w]
     elif h == 0 and w == len(boggle_matrix)-1:
-        return temp[h:h+2, w-1:], [h, w-1]
+        return boggle_matrix[h:h+2, w-1:], [h, w-1]
     else:
-        return temp[h-1:,w-1:], [h-1, w-1]
+        return boggle_matrix[h-1:,w-1:], [h-1, w-1]
     
 
 def checkMatrix(word, boggle_matrix, i, j, index, match_word):
@@ -35,19 +34,21 @@ def checkMatrix(word, boggle_matrix, i, j, index, match_word):
         # Check if the word matches the matching word
         if word == match_word:
             return True
+
+        temp_boggle_matrix = boggle_matrix.copy()
         # Try to find next letter in the matrix
         index += 1
         # Extract only the matrix of adjacent letters
-        matrix, indexes = adjacentLettersMatrix(boggle_matrix, i, j)  # 'indexes' is the index of top left letter of matrix
+        matrix, indexes = adjacentLettersMatrix(temp_boggle_matrix, i, j)  # 'indexes' is the index of top left letter of matrix
         # If the next letter of the word you are looking for is in the matrix go ahead
         if word[index] in matrix:
             # Find only the indexes of the searched letters
             index_arr = np.where(matrix == word[index])
             index_arr = [[index_arr[0][i], index_arr[1][i]] for i in range(len(index_arr[0]))]
             for x, y in index_arr:
-                match_word += boggle_matrix[indexes[0]+x][indexes[1]+y]
+                match_word += temp_boggle_matrix[indexes[0]+x][indexes[1]+y]
                 # Try to find the next one letter of the word
-                if not checkMatrix(word, boggle_matrix, indexes[0]+x, indexes[1]+y, index, match_word):
+                if not checkMatrix(word, temp_boggle_matrix, indexes[0]+x, indexes[1]+y, index, match_word):
                     # Try next letter in the matrix of adjacent letters if exist
                     match_word = match_word[:-1]
                     continue
